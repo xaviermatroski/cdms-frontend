@@ -38,7 +38,14 @@ const dashboardController = {
         const records = recordsResponse.data || [];
         stats.totalRecords = records.length;
       } catch (err) {
+        // Handle backend empty/invalid JSON as "no records" for dashboard
         console.log('Failed to fetch records:', err.message);
+        const isParseError = typeof err.message === 'string' && err.message.includes('Unexpected end of JSON input');
+        if (!isParseError) {
+          // for non-parse errors we still log the message; dashboard will show zeros
+          console.log('Records fetch error details:', err.response?.data || err.message);
+        }
+        stats.totalRecords = 0;
       }
 
       res.render('layouts/main', {

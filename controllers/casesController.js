@@ -76,7 +76,7 @@ const casesController = {
         pageTitle: 'Create Case',
         currentPage: '/cases',
         body: 'cases/create',
-        user: req.session.user,
+        user: req.session.user || {},
         policies: [],
         error: 'Failed to load policies',
         success: null
@@ -147,7 +147,7 @@ const casesController = {
       }
 
       res.render('layouts/main', {
-        case: caseData,
+        caseData: caseData,
         records,
         pageTitle: caseData.title,
         currentPage: '/cases',

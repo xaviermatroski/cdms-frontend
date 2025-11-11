@@ -1,4 +1,5 @@
 const axios = require('axios');
+const FormData = require('form-data');
 
 const API_URL = process.env.BACKEND_URL || 'http://localhost:3000';
 
@@ -35,7 +36,12 @@ const recordsController = {
         success: null
       });
     } catch (error) {
+      // If backend returned an empty body or invalid JSON (e.g. "Unexpected end of JSON input"),
+      // treat it as "no records" and render an empty list gracefully without surfacing raw parse errors.
       console.error('Error listing records:', error.message);
+      const isParseError = typeof error.message === 'string' && error.message.includes('Unexpected end of JSON input');
+      const friendlyError = isParseError ? null : (error.response?.data?.message || 'Failed to load records');
+
       res.render('layouts/main', {
         pageTitle: 'Records',
         currentPage: '/records',
@@ -43,7 +49,7 @@ const recordsController = {
         records: [],
         user: req.session.user,
         filters: {},
-        error: error.response?.data?.message || 'Failed to load records',
+        error: friendlyError,
         success: null
       });
     }
@@ -56,13 +62,39 @@ const recordsController = {
       const org = req.session.user.organization;
       const { caseId } = req.query;
 
+      // Fetch cases that the user has access to so frontend can show a dropdown
+      let cases = [];
+      try {
+        const casesResp = await axios.get(`${API_URL}/cases`, {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { org }
+        });
+        cases = casesResp.data || [];
+      } catch (err) {
+        console.log('Failed to fetch cases for record upload form:', err.message);
+        cases = [];
+      }
+      // Fetch policies that the user can use (may be empty)
+      let policies = [];
+      try {
+        const policiesResp = await axios.get(`${API_URL}/policies`, {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { org }
+        });
+        policies = policiesResp.data || [];
+      } catch (err) {
+        console.log('Failed to fetch policies for record upload form:', err.message);
+        policies = [];
+      }
+
       res.render('layouts/main', {
         pageTitle: 'Upload Record',
         currentPage: '/records',
         body: 'records/create',
         user: req.session.user,
-        selectedCaseId: caseId || null,
-        policies: [],
+  selectedCaseId: caseId || null,
+  cases,
+  policies,
         error: null,
         success: null
       });
@@ -104,7 +136,15 @@ const recordsController = {
       let recordId;
 
       const formData = new FormData();
-      formData.append('file', file.buffer || Buffer.from(file.data));
+      // Attach file buffer and metadata. Multer should provide `file.buffer` and `file.originalname` when using memoryStorage.
+      const fileBuffer = file.buffer || (file.data ? Buffer.from(file.data) : null);
+      const filename = file.originalname || `upload-${Date.now()}`;
+      if (fileBuffer) {
+        formData.append('file', fileBuffer, { filename, contentType: file.mimetype || 'application/octet-stream' });
+      } else {
+        // If file buffer isn't available, attempt to attach the raw file field (may work for diskStorage setups)
+        formData.append('file', file.path || file);
+      }
       formData.append('caseId', caseId);
       formData.append('recordType', recordType);
       formData.append('description', description);
@@ -113,17 +153,8 @@ const recordsController = {
         formData.append('policyId', policyId);
       }
 
-      const response = await axios.post(
-        `${API_URL}/records`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
-          },
-          params: { org }
-        }
-      );
+      const headers = Object.assign({ Authorization: `Bearer ${token}` }, formData.getHeaders());
+      const response = await axios.post(`${API_URL}/records`, formData, { headers, params: { org } });
       recordId = response.data.recordId;
 
       res.redirect(`/records/${recordId}?success=${encodeURIComponent('Record uploaded successfully')}`);

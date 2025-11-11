@@ -13,10 +13,15 @@
     <div class="card-body">
       <form method="POST" action="/records" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 20px;">
         
-        <!-- Case ID -->
+        <!-- Case Selection -->
         <div>
-          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Case ID *</label>
-          <input type="text" name="caseId" value="<%= selectedCaseId || '' %>" required placeholder="Enter case ID" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Case *</label>
+          <select name="caseId" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+            <option value="" <% if (!selectedCaseId) { %>selected<% } %>>Select case</option>
+            <% (cases || []).forEach(c => { %>
+              <option value="<%= c.id %>" <% if (selectedCaseId && selectedCaseId === c.id) { %>selected<% } %>><%= c.title %> - <%= c.id.substring(0,10) %>...</option>
+            <% }); %>
+          </select>
         </div>
 
         <!-- Record Type -->
@@ -28,6 +33,17 @@
             <option value="Evidence">Evidence</option>
             <option value="Report">Report</option>
             <option value="WitnessStatement">Witness Statement</option>
+          </select>
+        </div>
+
+        <!-- Policy (optional) -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Policy (optional)</label>
+          <select name="policyId" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+            <option value="">-- No Policy --</option>
+            <% (policies || []).forEach(p => { %>
+              <option value="<%= p.policyId %>"><%= p.policyId %> — <%= (p.categories || []).join(', ') %></option>
+            <% }); %>
           </select>
         </div>
 

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle || 'Login' %> - CDMS</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-900 to-indigo-900 flex items-center justify-center">
+  <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+    <h2 class="text-2xl font-bold text-center mb-6">Sign in to CDMS</h2>
+
+    <% if (error) { %>
+      <div class="mb-4 text-red-700 bg-red-100 p-3 rounded"> <strong>Error:</strong> <%= error %> </div>
+    <% } %>
+    <% if (success) { %>
+      <div class="mb-4 text-green-700 bg-green-100 p-3 rounded"> <strong>Success:</strong> <%= success %> </div>
+    <% } %>
+
+    <form action="/auth/login" method="post" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Username</label>
+        <input name="username" type="text" required class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <input name="password" type="password" required class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" />
+      </div>
+
+      <div class="flex items-center justify-between">
+        <button type="submit" class="w-full bg-blue-900 text-white py-2 rounded font-semibold">Sign In</button>
+      </div>
+    </form>
+
+    <p class="mt-6 text-center text-sm text-gray-500">Don't have an account? <a href="/auth/register" class="text-blue-900 font-semibold">Register here</a></p>
+  </div>
+</body>
+</html>

@@ -8,15 +8,12 @@ const profileController = {
     try {
       const user = req.session.user;
 
-      // Mock profile data
       const profile = {
         username: user.username,
         fullName: user.fullName,
-        email: user.username + '@police.gov', // Mock email
+        email: user.email || user.username + '@police.gov',
         role: user.role,
         organization: user.organization,
-        joinedDate: new Date('2025-01-15').toISOString(),
-        lastLogin: new Date().toISOString(),
         status: 'Active',
         permissions: getPermissions(user.role)
       };

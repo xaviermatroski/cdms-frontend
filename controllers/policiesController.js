@@ -2,30 +2,6 @@ const axios = require('axios');
 
 const API_URL = process.env.BACKEND_URL || 'http://localhost:3000';
 
-// Mock data for testing
-const mockPolicies = [
-  {
-    policyId: 'policy-001',
-    categories: ['Evidence', 'FIR'],
-    allowedOrgs: ['Org1MSP'],
-    allowedRoles: ['investigator', 'forensics', 'admin'],
-    createdBy: 'Org1MSP',
-    createdAt: new Date('2025-11-10').toISOString(),
-    docType: 'policy'
-  },
-  {
-    policyId: 'policy-002',
-    categories: ['Report'],
-    allowedOrgs: ['Org1MSP', 'Org2MSP'],
-    allowedRoles: ['admin', 'judge'],
-    createdBy: 'Org1MSP',
-    createdAt: new Date('2025-11-09').toISOString(),
-    docType: 'policy'
-  }
-];
-
-const USE_MOCK = true;
-
 const policiesController = {
   // List all policies (admin only)
   listPolicies: async (req, res) => {
@@ -43,15 +19,11 @@ const policiesController = {
 
       let policies = [];
 
-      if (USE_MOCK) {
-        policies = mockPolicies;
-      } else {
-        const response = await axios.get(`${API_URL}/policies`, {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { org }
-        });
-        policies = response.data;
-      }
+      const response = await axios.get(`${API_URL}/policies`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { org }
+      });
+      policies = response.data;
 
       res.render('layouts/main', {
         pageTitle: 'Policies',
@@ -123,7 +95,7 @@ const policiesController = {
 
       const token = req.session.token;
       const org = req.session.user.organization;
-      const { categories, allowedOrgs, allowedRoles } = req.body;
+      const { policyId: userProvidedPolicyId, categories, allowedOrgs, allowedRoles } = req.body;
 
       // Validate input
       if (!categories || categories.length === 0) {
@@ -136,40 +108,30 @@ const policiesController = {
         return res.redirect('/policies/create?error=Please select at least one role');
       }
 
+      // Use provided policyId or generate one
+      const policyId = userProvidedPolicyId && userProvidedPolicyId.trim() !== '' ? userProvidedPolicyId.trim() : `policy-${Date.now()}`;
+
       const policyData = {
+        policyId,
         categories: Array.isArray(categories) ? categories : [categories],
         allowedOrgs: Array.isArray(allowedOrgs) ? allowedOrgs : [allowedOrgs],
         allowedRoles: Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles]
       };
 
-      let policyId;
-
-      if (USE_MOCK) {
-        const newPolicy = {
-          policyId: `policy-${Date.now()}`,
-          ...policyData,
-          createdBy: org,
-          createdAt: new Date().toISOString(),
-          docType: 'policy'
-        };
-        mockPolicies.push(newPolicy);
-        policyId = newPolicy.policyId;
-      } else {
-        const response = await axios.post(
-          `${API_URL}/policies`,
-          policyData,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-            params: { org }
-          }
-        );
-        policyId = response.data.policyId;
-      }
+      const response = await axios.post(
+        `${API_URL}/policies`,
+        policyData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { org }
+        }
+      );
 
       res.redirect(`/policies/${policyId}?success=${encodeURIComponent('Policy created successfully')}`);
     } catch (error) {
       console.error('Error creating policy:', error.message);
-      res.redirect(`/policies/create?error=${encodeURIComponent(error.response?.data?.message || 'Failed to create policy')}`);
+      const errorMsg = error.response?.data?.message || error.message || 'Failed to create policy';
+      res.redirect(`/policies/create?error=${encodeURIComponent(errorMsg)}`);
     }
   },
 
@@ -189,21 +151,11 @@ const policiesController = {
 
       let policy;
 
-      if (USE_MOCK) {
-        policy = mockPolicies.find(p => p.policyId === id);
-        if (!policy) {
-          return res.status(404).render('error', {
-            message: 'Policy not found',
-            status: 404
-          });
-        }
-      } else {
-        const response = await axios.get(`${API_URL}/policies/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { org }
-        });
-        policy = response.data;
-      }
+      const response = await axios.get(`${API_URL}/policies/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { org }
+      });
+      policy = response.data;
 
       res.render('layouts/main', {
         policy,
@@ -234,21 +186,10 @@ const policiesController = {
       const org = req.session.user.organization;
       const { id } = req.params;
 
-      if (USE_MOCK) {
-        const index = mockPolicies.findIndex(p => p.policyId === id);
-        if (index === -1) {
-          return res.status(404).render('error', {
-            message: 'Policy not found',
-            status: 404
-          });
-        }
-        mockPolicies.splice(index, 1);
-      } else {
-        await axios.delete(`${API_URL}/policies/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { org }
-        });
-      }
+      await axios.delete(`${API_URL}/policies/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { org }
+      });
 
       res.redirect(`/policies?success=${encodeURIComponent('Policy deleted successfully')}`);
     } catch (error) {

@@ -18,8 +18,8 @@
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div>
         <div class="stat-label">Total Cases</div>
-        <div class="stat-value">24</div>
-        <div class="stat-change positive">↑ 12% from last month</div>
+        <div class="stat-value"><%= stats.totalCases %></div>
+        <div class="stat-change positive">From organization</div>
       </div>
       <div class="stat-icon" style="color: var(--primary);">
         <i class="fas fa-folder-open"></i>
@@ -31,9 +31,9 @@
   <div class="stat-card" style="border-left-color: #4f46e5;">
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div>
-        <div class="stat-label">Recent Records</div>
-        <div class="stat-value">156</div>
-        <div class="stat-change positive">↑ 8% from last month</div>
+        <div class="stat-label">Total Records</div>
+        <div class="stat-value"><%= stats.totalRecords %></div>
+        <div class="stat-change positive">From organization</div>
       </div>
       <div class="stat-icon" style="color: #4f46e5;">
         <i class="fas fa-file-alt"></i>
@@ -41,16 +41,16 @@
     </div>
   </div>
 
-  <!-- Pending Actions -->
+  <!-- User Role -->
   <div class="stat-card" style="border-left-color: #f59e0b;">
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div>
-        <div class="stat-label">Pending Actions</div>
-        <div class="stat-value">7</div>
-        <div class="stat-change negative">↓ 3% from last month</div>
+        <div class="stat-label">Your Role</div>
+        <div class="stat-value" style="font-size: 18px;"><%= user.role %></div>
+        <div class="stat-change"><%= user.organization %></div>
       </div>
       <div class="stat-icon" style="color: #f59e0b;">
-        <i class="fas fa-exclamation-triangle"></i>
+        <i class="fas fa-user-shield"></i>
       </div>
     </div>
   </div>
@@ -61,40 +61,38 @@
   <div class="card-header">
     <h2 class="card-title">Recent Cases</h2>
   </div>
-  <div style="overflow-x: auto;">
-    <table>
-      <thead>
-        <tr>
-          <th>Case ID</th>
-          <th>Title</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>#001</strong></td>
-          <td>Robbery at Downtown Bank</td>
-          <td><span class="badge badge-success">Open</span></td>
-          <td>Nov 10, 2025</td>
-          <td><a href="#" style="color: var(--primary); text-decoration: none;">View</a></td>
-        </tr>
-        <tr>
-          <td><strong>#002</strong></td>
-          <td>Vehicle Theft Investigation</td>
-          <td><span class="badge badge-warning">Under Investigation</span></td>
-          <td>Nov 09, 2025</td>
-          <td><a href="#" style="color: var(--primary); text-decoration: none;">View</a></td>
-        </tr>
-        <tr>
-          <td><strong>#003</strong></td>
-          <td>Document Forgery Case</td>
-          <td><span class="badge badge-secondary">Closed</span></td>
-          <td>Nov 08, 2025</td>
-          <td><a href="#" style="color: var(--primary); text-decoration: none;">View</a></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <% if (recentCases && recentCases.length > 0) { %>
+    <div style="overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Case ID</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% recentCases.forEach(caseItem => { %>
+            <tr>
+              <td><strong><%= caseItem.id %></strong></td>
+              <td><%= caseItem.title %></td>
+              <td>
+                <span class="badge <% if (caseItem.status === 'Open') { %>badge-success<% } else if (caseItem.status === 'Under Investigation') { %>badge-warning<% } else { %>badge-secondary<% } %>">
+                  <%= caseItem.status %>
+                </span>
+              </td>
+              <td><%= new Date(caseItem.createdAt).toLocaleDateString() %></td>
+              <td><a href="/cases/<%= caseItem.id %>" style="color: var(--primary); text-decoration: none;">View</a></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div style="padding: 40px; text-align: center; color: #9ca3af;">
+      <p>No cases found. <a href="/cases/create" style="color: var(--primary); text-decoration: none;">Create one</a></p>
+    </div>
+  <% } %>
 </div>

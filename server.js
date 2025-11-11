@@ -29,18 +29,8 @@ app.use(session({
 }));
 
 // After your session middleware, add this:
+// Attach session user (if any) to locals for templates
 app.use((req, res, next) => {
-  // If no session user, create a mock one (for testing)
-  if (!req.session.user) {
-    req.session.user = {
-      username: 'john_doe',
-      fullName: 'John Doe',
-      role: 'admin',
-      organization: 'Org1MSP',
-      token: 'mock-token'
-    };
-    req.session.token = 'mock-token';
-  }
   res.locals.user = req.session.user;
   res.locals.currentPage = req.path;
   next();
@@ -82,19 +72,24 @@ app.get('/policies/:id/delete', policiesController.deletePolicy);
 // Import controller profile
 const profileController = require('./controllers/profileController');
 
+// Auth controller (login / logout)
+const authController = require('./controllers/authController');
+
+// Dashboard controller
+const dashboardController = require('./controllers/dashboardController');
+
 // Profile routes
 app.get('/profile', profileController.showProfile);
 
+// Auth routes
+app.get('/auth/login', authController.showLogin);
+app.post('/auth/login', authController.doLogin);
+app.get('/auth/logout', authController.logout);
+app.get('/auth/register', authController.showRegister);
+app.post('/auth/register', authController.doRegister);
+
 // Dashboard route
-app.get('/dashboard', (req, res) => {
-  res.render('layouts/main', {
-    pageTitle: 'Dashboard',
-    currentPage: '/dashboard',
-    body: 'dashboard/index',
-    success: req.query.success ? decodeURIComponent(req.query.success) : null,
-    error: req.query.error ? decodeURIComponent(req.query.error) : null
-  });
-});
+app.get('/dashboard', dashboardController.showDashboard);
 
 // Records route
 app.get('/records', (req, res) => {

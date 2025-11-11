@@ -23,14 +23,22 @@
 
       <div class="navbar-right">
         <div class="org-badge"><%= user.organization %></div>
-        
-        <button class="user-menu" id="userMenuBtn">
-          <div class="user-avatar"><%= user.username.charAt(0).toUpperCase() %></div>
-          <div class="user-info">
-            <div class="user-name"><%= user.fullName || user.username %></div>
-            <div class="user-role"><%= user.role %></div>
+
+        <div class="user-menu-wrapper">
+          <div id="userMenu" class="user-menu">
+            <div class="user-avatar"><%= user.username.charAt(0).toUpperCase() %></div>
+            <div class="user-info">
+              <div class="user-name"><%= user.fullName || user.username %></div>
+              <div class="user-role"><%= user.role %></div>
+            </div>
           </div>
-        </button>
+
+          <div id="userDropdown" class="user-dropdown hidden">
+            <a href="/profile" class="dropdown-link">My Profile</a>
+            <div class="dropdown-divider"></div>
+            <a href="/auth/logout" class="dropdown-link">Logout</a>
+          </div>
+        </div>
       </div>
     </nav>
 

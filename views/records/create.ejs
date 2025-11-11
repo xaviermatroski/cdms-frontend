@@ -42,7 +42,7 @@
           <select name="policyId" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
             <option value="">-- No Policy --</option>
             <% (policies || []).forEach(p => { %>
-              <option value="<%= p.policyId %>"><%= p.policyId %> — <%= (p.categories || []).join(', ') %></option>
+              <option value="<%= p.policyId %>"><%= p.policyId %></option>
             <% }); %>
           </select>
         </div>

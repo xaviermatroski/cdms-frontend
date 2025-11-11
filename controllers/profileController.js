@@ -11,7 +11,7 @@ const profileController = {
       const profile = {
         username: user.username,
         fullName: user.fullName,
-        email: user.email || user.username + '@police.gov',
+        email: user.email || user.username + '@cdms.gov',
         role: user.role,
         organization: user.organization,
         status: 'Active',

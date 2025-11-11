@@ -75,7 +75,7 @@
         <tbody>
           <% records.forEach(record => { %>
             <tr>
-              <td><strong><%= record.id.substring(0, 10) %></strong></td>
+              <td><strong><%= record.id %></strong></td>
               <td>
                 <% if (record.recordType === 'FIR') { %>
                   <span class="badge badge-success">FIR</span>
@@ -87,10 +87,30 @@
                   <span class="badge badge-secondary">WITNESS</span>
                 <% } %>
               </td>
-              <td><%= record.description || '-' %></td>
-              <td><a href="/cases/<%= record.caseId %>" style="color: var(--primary); text-decoration: none;"><%= record.caseId.substring(0, 10) %></a></td>
+              <td>
+                <% 
+                  // Support both camelCase and PascalCase keys from backend and truncate long text for table
+                  const rawDesc = record.description || record.Description || '';
+                  const desc = (typeof rawDesc === 'string') ? rawDesc : String(rawDesc || '');
+                  const descPreview = desc.length > 120 ? desc.substring(0, 120) + '…' : desc;
+                %>
+                <%= descPreview || '-' %>
+              </td>
+              <td><a href="/cases/<%= record.caseId %>" style="color: var(--primary); text-decoration: none;"><%= record.caseId || '-' %></a></td>
               <td style="font-size: 13px; color: #6b7280;">
-                <%= new Date(record.createdAt).toLocaleDateString() %>
+                <% 
+                  // Show friendly date if valid ISO, otherwise show raw value or dash
+                  let createdDisplay = '-';
+                  if (record && record.createdAt) {
+                    const ts = Date.parse(record.createdAt);
+                    if (!isNaN(ts)) {
+                      createdDisplay = new Date(ts).toLocaleDateString();
+                    } else {
+                      createdDisplay = record.createdAt;
+                    }
+                  }
+                %>
+                <%= createdDisplay %>
               </td>
               <td>
                 <a href="/records/<%= record.id %>" style="color: var(--primary); text-decoration: none; margin-right: 10px;">View</a>

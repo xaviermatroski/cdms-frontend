@@ -39,14 +39,6 @@
           <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">STATUS</p>
           <p style="font-size: 14px;"><span style="display: inline-block; background-color: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;"><i class="fas fa-circle"></i> <%= profile.status %></span></p>
         </div>
-        <div>
-          <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">JOINED DATE</p>
-          <p style="font-size: 14px; color: #1f2937;"><%= new Date(profile.joinedDate).toLocaleDateString() %></p>
-        </div>
-        <div>
-          <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">LAST LOGIN</p>
-          <p style="font-size: 14px; color: #1f2937;"><%= new Date(profile.lastLogin).toLocaleString() %></p>
-        </div>
       </div>
     </div>
   </div>
@@ -110,7 +102,7 @@
           <% if (profile.organization === 'Org1MSP') { %>
             Police Department
           <% } else if (profile.organization === 'Org2MSP') { %>
-            Judiciary
+            Judiciary and Forensics
           <% } else { %>
             <%= profile.organization %>
           <% } %>

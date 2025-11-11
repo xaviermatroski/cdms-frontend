@@ -24,10 +24,12 @@
         <div>
           <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 14px;">Record Categories *</label>
           <div style="display: flex; flex-direction: column; gap: 10px;">
-            <% ['FIR', 'Evidence', 'Report', 'WitnessStatement'].forEach(cat => { %>
+            <% 
+              const categoryDisplay = { FIR: 'Public', Evidence: 'Highly Restricted', Report: 'Restricted', WitnessStatement: 'Open' };
+              ['FIR', 'Evidence', 'Report', 'WitnessStatement'].forEach(cat => { %>
               <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                 <input type="checkbox" name="categories" value="<%= cat %>" style="width: 16px; height: 16px; cursor: pointer;">
-                <span style="font-size: 14px;"><%= cat %></span>
+                <span style="font-size: 14px;"><%= categoryDisplay[cat] || cat %></span>
               </label>
             <% }); %>
           </div>

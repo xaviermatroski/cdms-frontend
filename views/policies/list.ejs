@@ -30,7 +30,6 @@
             <th>Categories</th>
             <th>Allowed Organizations</th>
             <th>Allowed Roles</th>
-            <th>Created</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -39,8 +38,10 @@
             <tr>
               <td><strong><%= policy.policyId %></strong></td>
               <td>
-                <% policy.categories.forEach(cat => { %>
-                  <span class="badge badge-success" style="margin-right: 5px; margin-bottom: 5px;"><%= cat %></span>
+                <% 
+                  const categoryDisplay = { FIR: 'Public', Evidence: 'Highly Restricted', Report: 'Restricted', WitnessStatement: 'Open' };
+                  policy.categories.forEach(cat => { %>
+                  <span class="badge badge-success" style="margin-right: 5px; margin-bottom: 5px;"><%= categoryDisplay[cat] || cat %></span>
                 <% }); %>
               </td>
               <td>
@@ -53,9 +54,7 @@
                   <span style="display: inline-block; background-color: #f0f4ff; color: #1e3a8a; padding: 4px 8px; border-radius: 3px; font-size: 12px; margin-right: 5px; margin-bottom: 5px;"><%= role %></span>
                 <% }); %>
               </td>
-              <td style="font-size: 13px; color: #6b7280;">
-                <%= new Date(policy.createdAt).toLocaleDateString() %>
-              </td>
+              <!-- Created column removed from policy list to avoid showing invalid dates -->
               <td>
                 <a href="/policies/<%= policy.policyId %>" style="color: var(--primary); text-decoration: none; margin-right: 10px;">View</a>
                 <a href="/policies/<%= policy.policyId %>/delete" onclick="return confirm('Are you sure?');" style="color: #dc2626; text-decoration: none;">Delete</a>

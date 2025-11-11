@@ -69,7 +69,6 @@
             <th>Case ID</th>
             <th>Title</th>
             <th>Status</th>
-            <th>Date</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -83,7 +82,6 @@
                   <%= caseItem.status %>
                 </span>
               </td>
-              <td><%= new Date(caseItem.createdAt).toLocaleDateString() %></td>
               <td><a href="/cases/<%= caseItem.id %>" style="color: var(--primary); text-decoration: none;">View</a></td>
             </tr>
           <% }); %>

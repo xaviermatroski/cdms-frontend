@@ -58,14 +58,13 @@
             <th>Status</th>
             <th>Jurisdiction</th>
             <th>Type</th>
-            <th>Created</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <% cases.forEach(caseItem => { %>
             <tr>
-              <td><strong><%= caseItem.id.substring(0, 8) %></strong></td>
+              <td><strong><%= caseItem.id %></strong></td>
               <td><a href="/cases/<%= caseItem.id %>" style="color: var(--primary); text-decoration: none;"><%= caseItem.title %></a></td>
               <td>
                 <% if (caseItem.status === 'Open') { %>
@@ -78,9 +77,6 @@
               </td>
               <td><%= caseItem.jurisdiction %></td>
               <td><%= caseItem.caseType %></td>
-              <td style="font-size: 13px; color: #6b7280;">
-                <%= new Date(caseItem.createdAt).toLocaleDateString() %>
-              </td>
               <td>
                 <a href="/cases/<%= caseItem.id %>" style="color: var(--primary); text-decoration: none; margin-right: 10px;">View</a>
                 <% if (user.role === 'admin' || user.role === 'investigator') { %>

@@ -171,17 +171,44 @@ const recordsController = {
       const org = req.session.user.organization;
       const { id } = req.params;
 
-      let record;
+      let record = {
+        id: id,
+        recordType: 'Unknown',
+        caseId: 'N/A',
+        createdAt: new Date(),
+        ownerOrg: org,
+        fileHash: 'N/A',
+        offChainUri: 'N/A',
+        policyId: null,
+        description: 'Unable to load record details'
+      };
 
-      const response = await axios.get(`${API_URL}/records/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-        params: { org }
-      });
-      record = response.data;
+      // Fetch all records and find the matching one to get full metadata
+      // Since GET /records/:id returns a file stream, we fetch the list and find by ID
+      try {
+        const response = await axios.get(`${API_URL}/records`, {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { org }
+        });
+        
+        const records = response.data;
+        if (Array.isArray(records)) {
+          const foundRecord = records.find(r => r.id === id);
+          if (foundRecord) {
+            record = foundRecord;
+          } else {
+            console.log(`Record with ID ${id} not found in records list`);
+          }
+        }
+      } catch (err) {
+        // Backend error or no records available
+        // Continue with partial record so detail page still renders
+        console.log('Could not fetch records list from backend:', err.message);
+      }
 
       res.render('layouts/main', {
         record,
-        pageTitle: `Record ${record.recordType}`,
+        pageTitle: `Record ${record.recordType || 'Details'}`,
         currentPage: '/records',
         body: 'records/detail',
         user: req.session.user,

@@ -1,0 +1,91 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1 class="page-title">Policy Details</h1>
+  <a href="/policies/<%= policy.policyId %>/delete" onclick="return confirm('Delete this policy? This action cannot be undone.');" class="btn" style="background-color: #dc2626; color: white;">
+    <i class="fas fa-trash"></i> Delete
+  </a>
+</div>
+
+<!-- Policy Info -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+  <!-- Main Content -->
+  <div class="card" style="grid-column: 1 / -1;">
+    <div class="card-header">
+      <h3 class="card-title">Policy Configuration</h3>
+    </div>
+    <div class="card-body">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px;">
+        <!-- Categories -->
+        <div>
+          <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 12px;">RECORD CATEGORIES</p>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <% policy.categories.forEach(cat => { %>
+              <span class="badge badge-success"><%= cat %></span>
+            <% }); %>
+          </div>
+        </div>
+
+        <!-- Organizations -->
+        <div>
+          <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 12px;">ALLOWED ORGANIZATIONS</p>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <% policy.allowedOrgs.forEach(org => { %>
+              <span style="display: inline-block; background-color: #e5e7eb; color: #374151; padding: 6px 10px; border-radius: 4px; font-size: 13px; width: fit-content;"><%= org %></span>
+            <% }); %>
+          </div>
+        </div>
+
+        <!-- Roles -->
+        <div>
+          <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 12px;">ALLOWED ROLES</p>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <% policy.allowedRoles.forEach(role => { %>
+              <span style="display: inline-block; background-color: #f0f4ff; color: #1e3a8a; padding: 6px 10px; border-radius: 4px; font-size: 13px; width: fit-content; text-transform: capitalize;"><%= role %></span>
+            <% }); %>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">POLICY ID</p>
+            <p style="font-size: 14px; font-family: monospace;"><%= policy.policyId %></p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">CREATED BY</p>
+            <p style="font-size: 14px;"><%= policy.createdBy %></p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">CREATED AT</p>
+            <p style="font-size: 14px;"><%= new Date(policy.createdAt).toLocaleString() %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Access Summary -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title" style="font-size: 14px;">Access Summary</h3>
+    </div>
+    <div class="card-body" style="font-size: 13px; line-height: 1.8;">
+      <p><strong style="color: #1f2937;">This policy allows:</strong></p>
+      <p style="margin: 10px 0 0 0; padding: 10px; background-color: #f0f9ff; border-radius: 4px;">
+        Users with roles: <strong><%= policy.allowedRoles.join(', ') %></strong><br>
+        From organizations: <strong><%= policy.allowedOrgs.join(', ') %></strong><br>
+        To access: <strong><%= policy.categories.join(', ') %></strong> records
+      </p>
+    </div>
+  </div>
+
+  <!-- Back Button -->
+  <div class="card">
+    <div class="card-body">
+      <a href="/policies" class="btn btn-primary" style="width: 100%; justify-content: center;">
+        <i class="fas fa-arrow-left"></i> Back to Policies
+      </a>
+    </div>
+  </div>
+</div>

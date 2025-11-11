@@ -1,0 +1,70 @@
+<nav class="navbar fixed top-0 left-0 right-0 bg-white border-b border-gray-200 shadow-sm z-50">
+  <div class="flex items-center justify-between h-16 px-6">
+    <!-- Left Side -->
+    <div class="flex items-center gap-4">
+      <!-- Sidebar Toggle Button -->
+      <button id="sidebarToggle" class="md:hidden sidebar-toggle p-2 hover:bg-gray-100 rounded">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <!-- Brand -->
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-900 rounded flex items-center justify-center text-white font-bold">
+          <svg fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
+            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h12a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6z"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="text-lg font-bold text-blue-900">CDMS</div>
+          <div class="text-xs text-gray-500">Criminal Data Management</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side -->
+    <div class="flex items-center gap-6">
+      <!-- Organization Badge -->
+      <% if (user) { %>
+        <div class="hidden sm:block bg-blue-50 text-blue-900 px-3 py-1 rounded text-sm font-semibold">
+          <%= user.organization %>
+        </div>
+      <% } %>
+
+      <!-- User Menu -->
+      <% if (user) { %>
+        <div class="dropdown relative">
+          <div id="userMenu" class="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-100 rounded">
+            <div class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+              <%= user.username.charAt(0).toUpperCase() %>
+            </div>
+            <div class="hidden sm:block">
+              <div class="text-sm font-medium text-gray-900"><%= user.fullName || user.username %></div>
+              <div class="text-xs text-gray-500"><%= user.role %></div>
+            </div>
+            <svg fill="currentColor" viewBox="0 0 20 20" class="w-4 h-4 text-gray-600 hidden sm:block">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+
+          <div id="userDropdown" class="dropdown-menu hidden absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg min-w-max z-100">
+            <a href="/profile" class="dropdown-item flex items-center gap-2 w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+              <svg fill="currentColor" viewBox="0 0 20 20" class="w-4 h-4">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+              </svg>
+              My Profile
+            </a>
+            <div class="border-t border-gray-200"></div>
+            <a href="/auth/logout" class="dropdown-item flex items-center gap-2 w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+              <svg fill="currentColor" viewBox="0 0 20 20" class="w-4 h-4">
+                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+              </svg>
+              Logout
+            </a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</nav>

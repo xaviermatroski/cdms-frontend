@@ -1,0 +1,96 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1 class="page-title">Cases</h1>
+  <a href="/cases/create" class="btn btn-primary">
+    <i class="fas fa-plus"></i> New Case
+  </a>
+</div>
+
+<!-- Filters -->
+<div class="card" style="margin-bottom: 20px;">
+  <div class="card-header">
+    <h3 class="card-title" style="font-size: 16px;">Filters</h3>
+  </div>
+  <div class="card-body">
+    <form method="GET" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+      <div style="flex: 1; min-width: 200px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Status</label>
+        <select name="status" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+          <option value="">All Statuses</option>
+          <option value="Open" <% if (filters.status === 'Open') { %>selected<% } %>>Open</option>
+          <option value="Closed" <% if (filters.status === 'Closed') { %>selected<% } %>>Closed</option>
+          <option value="Under Investigation" <% if (filters.status === 'Under Investigation') { %>selected<% } %>>Under Investigation</option>
+        </select>
+      </div>
+
+      <div style="flex: 1; min-width: 200px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Jurisdiction</label>
+        <input type="text" name="jurisdiction" value="<%= filters.jurisdiction %>" placeholder="Filter by jurisdiction" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="height: 36px;">
+        <i class="fas fa-search"></i> Apply Filters
+      </button>
+      <a href="/cases" class="btn" style="background-color: #e5e7eb; color: #1f2937; height: 36px;">
+        <i class="fas fa-times"></i> Clear
+      </a>
+    </form>
+  </div>
+</div>
+
+<!-- Cases Table -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">All Cases (<%= cases.length %>)</h3>
+  </div>
+  <% if (cases.length === 0) { %>
+    <div style="padding: 40px 20px; text-align: center; color: #9ca3af;">
+      <i class="fas fa-inbox" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
+      <p>No cases found. <a href="/cases/create" style="color: var(--primary);">Create one</a></p>
+    </div>
+  <% } else { %>
+    <div style="overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Case ID</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Jurisdiction</th>
+            <th>Type</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% cases.forEach(caseItem => { %>
+            <tr>
+              <td><strong><%= caseItem.id.substring(0, 8) %></strong></td>
+              <td><a href="/cases/<%= caseItem.id %>" style="color: var(--primary); text-decoration: none;"><%= caseItem.title %></a></td>
+              <td>
+                <% if (caseItem.status === 'Open') { %>
+                  <span class="badge badge-success">OPEN</span>
+                <% } else if (caseItem.status === 'Closed') { %>
+                  <span class="badge badge-secondary">CLOSED</span>
+                <% } else { %>
+                  <span class="badge badge-warning">UNDER INVESTIGATION</span>
+                <% } %>
+              </td>
+              <td><%= caseItem.jurisdiction %></td>
+              <td><%= caseItem.caseType %></td>
+              <td style="font-size: 13px; color: #6b7280;">
+                <%= new Date(caseItem.createdAt).toLocaleDateString() %>
+              </td>
+              <td>
+                <a href="/cases/<%= caseItem.id %>" style="color: var(--primary); text-decoration: none; margin-right: 10px;">View</a>
+                <% if (user.role === 'admin' || user.role === 'investigator') { %>
+                  <a href="/cases/<%= caseItem.id %>/delete" onclick="return confirm('Are you sure?');" style="color: #dc2626; text-decoration: none;">Delete</a>
+                <% } %>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>

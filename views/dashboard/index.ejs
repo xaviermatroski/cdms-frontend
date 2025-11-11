@@ -1,0 +1,100 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1 class="page-title"><%= pageTitle %></h1>
+  <div style="display: flex; gap: 10px;">
+    <a href="/cases/create" class="btn btn-primary">
+      <i class="fas fa-plus"></i> New Case
+    </a>
+    <a href="/records/create" class="btn btn-info">
+      <i class="fas fa-upload"></i> Upload Record
+    </a>
+  </div>
+</div>
+
+<!-- Statistics Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+  <!-- Total Cases -->
+  <div class="stat-card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div>
+        <div class="stat-label">Total Cases</div>
+        <div class="stat-value">24</div>
+        <div class="stat-change positive">↑ 12% from last month</div>
+      </div>
+      <div class="stat-icon" style="color: var(--primary);">
+        <i class="fas fa-folder-open"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Records -->
+  <div class="stat-card" style="border-left-color: #4f46e5;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div>
+        <div class="stat-label">Recent Records</div>
+        <div class="stat-value">156</div>
+        <div class="stat-change positive">↑ 8% from last month</div>
+      </div>
+      <div class="stat-icon" style="color: #4f46e5;">
+        <i class="fas fa-file-alt"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Actions -->
+  <div class="stat-card" style="border-left-color: #f59e0b;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div>
+        <div class="stat-label">Pending Actions</div>
+        <div class="stat-value">7</div>
+        <div class="stat-change negative">↓ 3% from last month</div>
+      </div>
+      <div class="stat-icon" style="color: #f59e0b;">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Cases Table -->
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Recent Cases</h2>
+  </div>
+  <div style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Case ID</th>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>#001</strong></td>
+          <td>Robbery at Downtown Bank</td>
+          <td><span class="badge badge-success">Open</span></td>
+          <td>Nov 10, 2025</td>
+          <td><a href="#" style="color: var(--primary); text-decoration: none;">View</a></td>
+        </tr>
+        <tr>
+          <td><strong>#002</strong></td>
+          <td>Vehicle Theft Investigation</td>
+          <td><span class="badge badge-warning">Under Investigation</span></td>
+          <td>Nov 09, 2025</td>
+          <td><a href="#" style="color: var(--primary); text-decoration: none;">View</a></td>
+        </tr>
+        <tr>
+          <td><strong>#003</strong></td>
+          <td>Document Forgery Case</td>
+          <td><span class="badge badge-secondary">Closed</span></td>
+          <td>Nov 08, 2025</td>
+          <td><a href="#" style="color: var(--primary); text-decoration: none;">View</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,108 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1 class="page-title">Records</h1>
+  <a href="/records/create" class="btn btn-primary">
+    <i class="fas fa-upload"></i> Upload Record
+  </a>
+</div>
+
+<!-- Filters -->
+<div class="card" style="margin-bottom: 20px;">
+  <div class="card-header">
+    <h3 class="card-title" style="font-size: 16px;">Filters</h3>
+  </div>
+  <div class="card-body">
+    <form method="GET" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+      <div style="flex: 1; min-width: 200px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Record Type</label>
+        <select name="recordType" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+          <option value="">All Types</option>
+          <option value="FIR" <% if (filters.recordType === 'FIR') { %>selected<% } %>>FIR</option>
+          <option value="Evidence" <% if (filters.recordType === 'Evidence') { %>selected<% } %>>Evidence</option>
+          <option value="Report" <% if (filters.recordType === 'Report') { %>selected<% } %>>Report</option>
+          <option value="WitnessStatement" <% if (filters.recordType === 'WitnessStatement') { %>selected<% } %>>Witness Statement</option>
+        </select>
+      </div>
+
+      <div style="flex: 1; min-width: 200px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Case ID</label>
+        <input type="text" name="caseId" value="<%= filters.caseId || '' %>" placeholder="Filter by case ID" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+      </div>
+
+      <div style="flex: 1; min-width: 200px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">From Date</label>
+        <input type="date" name="dateFrom" value="<%= filters.dateFrom || '' %>" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+      </div>
+
+      <div style="flex: 1; min-width: 200px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">To Date</label>
+        <input type="date" name="dateTo" value="<%= filters.dateTo || '' %>" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="height: 36px;">
+        <i class="fas fa-search"></i> Apply Filters
+      </button>
+      <a href="/records" class="btn" style="background-color: #e5e7eb; color: #1f2937; height: 36px;">
+        <i class="fas fa-times"></i> Clear
+      </a>
+    </form>
+  </div>
+</div>
+
+<!-- Records Table -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">All Records (<%= records.length %>)</h3>
+  </div>
+  <% if (records.length === 0) { %>
+    <div style="padding: 40px 20px; text-align: center; color: #9ca3af;">
+      <i class="fas fa-file" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
+      <p>No records found. <a href="/records/create" style="color: var(--primary);">Upload one</a></p>
+    </div>
+  <% } else { %>
+    <div style="overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Record ID</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Case ID</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% records.forEach(record => { %>
+            <tr>
+              <td><strong><%= record.id.substring(0, 10) %></strong></td>
+              <td>
+                <% if (record.recordType === 'FIR') { %>
+                  <span class="badge badge-success">FIR</span>
+                <% } else if (record.recordType === 'Evidence') { %>
+                  <span class="badge badge-success">EVIDENCE</span>
+                <% } else if (record.recordType === 'Report') { %>
+                  <span class="badge badge-warning">REPORT</span>
+                <% } else { %>
+                  <span class="badge badge-secondary">WITNESS</span>
+                <% } %>
+              </td>
+              <td><%= record.description || '-' %></td>
+              <td><a href="/cases/<%= record.caseId %>" style="color: var(--primary); text-decoration: none;"><%= record.caseId.substring(0, 10) %></a></td>
+              <td style="font-size: 13px; color: #6b7280;">
+                <%= new Date(record.createdAt).toLocaleDateString() %>
+              </td>
+              <td>
+                <a href="/records/<%= record.id %>" style="color: var(--primary); text-decoration: none; margin-right: 10px;">View</a>
+                <a href="/records/<%= record.id %>/download" style="color: #059669; text-decoration: none; margin-right: 10px;">Download</a>
+                <% if (user.role === 'admin') { %>
+                  <a href="/records/<%= record.id %>/delete" onclick="return confirm('Are you sure?');" style="color: #dc2626; text-decoration: none;">Delete</a>
+                <% } %>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>

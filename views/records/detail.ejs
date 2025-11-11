@@ -1,0 +1,111 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1 class="page-title">Record Details</h1>
+  <div style="display: flex; gap: 10px;">
+    <a href="/records/<%= record.id %>/download" class="btn btn-primary">
+      <i class="fas fa-download"></i> Download
+    </a>
+    <% if (user.role === 'admin') { %>
+      <a href="/records/<%= record.id %>/delete" onclick="return confirm('Delete this record? This action cannot be undone.');" class="btn" style="background-color: #dc2626; color: white;">
+        <i class="fas fa-trash"></i> Delete
+      </a>
+    <% } %>
+  </div>
+</div>
+
+<!-- Record Details -->
+<div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px;">
+  <!-- Main Content -->
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    <!-- Record Info Card -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Record Information</h3>
+      </div>
+      <div class="card-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">RECORD ID</p>
+            <p style="font-size: 16px; font-weight: 600;"><%= record.id %></p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">RECORD TYPE</p>
+            <p>
+              <% if (record.recordType === 'FIR') { %>
+                <span class="badge badge-success">FIR</span>
+              <% } else if (record.recordType === 'Evidence') { %>
+                <span class="badge badge-success">EVIDENCE</span>
+              <% } else if (record.recordType === 'Report') { %>
+                <span class="badge badge-warning">REPORT</span>
+              <% } else { %>
+                <span class="badge badge-secondary">WITNESS STATEMENT</span>
+              <% } %>
+            </p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">CASE ID</p>
+            <p style="font-size: 14px;"><a href="/cases/<%= record.caseId %>" style="color: var(--primary); text-decoration: none;"><%= record.caseId %></a></p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">CREATED</p>
+            <p style="font-size: 14px;"><%= new Date(record.createdAt).toLocaleString() %></p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">OWNER ORG</p>
+            <p style="font-size: 14px;"><%= record.ownerOrg %></p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">FILE HASH</p>
+            <p style="font-size: 12px; font-family: monospace; word-break: break-all;"><%= record.fileHash %></p>
+          </div>
+        </div>
+
+        <% if (record.description) { %>
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 8px;">DESCRIPTION</p>
+            <p style="font-size: 14px; line-height: 1.6; color: #4b5563;"><%= record.description %></p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- File Info Card -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">File Information</h3>
+      </div>
+      <div class="card-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">STORAGE LOCATION</p>
+            <p style="font-size: 13px; font-family: monospace; word-break: break-all;"><%= record.offChainUri %></p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">POLICY</p>
+            <p style="font-size: 14px;"><%= record.policyId || 'None' %></p>
+          </div>
+        </div>
+        <div style="margin-top: 15px; padding: 10px; background-color: #f0f9ff; border-radius: 4px; border-left: 3px solid #059669;">
+          <p style="margin: 0; font-size: 12px; color: #065f46;"><i class="fas fa-lock"></i> This file is encrypted at rest with AES-256-GCM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div>
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title" style="font-size: 14px;">Quick Actions</h3>
+      </div>
+      <div class="card-body" style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="/records/<%= record.id %>/download" class="btn btn-primary" style="width: 100%; justify-content: center;">
+          <i class="fas fa-download"></i> Download File
+        </a>
+        <a href="/records" class="btn" style="background-color: #e5e7eb; color: #1f2937; width: 100%; justify-content: center;">
+          <i class="fas fa-arrow-left"></i> Back to Records
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

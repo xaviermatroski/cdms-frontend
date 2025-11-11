@@ -1,0 +1,127 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1 class="page-title"><%= case.title %></h1>
+  <div style="display: flex; gap: 10px;">
+    <% if (user.role === 'admin' || user.role === 'investigator') { %>
+      <a href="/cases/<%= case.id %>/delete" onclick="return confirm('Delete this case? This action cannot be undone.');" class="btn" style="background-color: #dc2626; color: white;">
+        <i class="fas fa-trash"></i> Delete
+      </a>
+    <% } %>
+  </div>
+</div>
+
+<!-- Case Details -->
+<div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px;">
+  <!-- Main Content -->
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    <!-- Case Info Card -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Case Information</h3>
+      </div>
+      <div class="card-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">CASE ID</p>
+            <p style="font-size: 16px; font-weight: 600;"><%= case.id.substring(0, 12) %>...</p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">STATUS</p>
+            <p>
+              <% if (case.status === 'Open') { %>
+                <span class="badge badge-success">OPEN</span>
+              <% } else if (case.status === 'Closed') { %>
+                <span class="badge badge-secondary">CLOSED</span>
+              <% } else { %>
+                <span class="badge badge-warning">UNDER INVESTIGATION</span>
+              <% } %>
+            </p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">JURISDICTION</p>
+            <p style="font-size: 16px; font-weight: 600;"><%= case.jurisdiction %></p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">CASE TYPE</p>
+            <p style="font-size: 16px; font-weight: 600;"><%= case.caseType %></p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">CREATED BY</p>
+            <p style="font-size: 14px;"><%= case.createdBy %></p>
+          </div>
+          <div>
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">CREATED AT</p>
+            <p style="font-size: 14px;"><%= new Date(case.createdAt).toLocaleDateString() %></p>
+          </div>
+        </div>
+
+        <% if (case.description) { %>
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+            <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 8px;">DESCRIPTION</p>
+            <p style="font-size: 14px; line-height: 1.6; color: #4b5563;"><%= case.description %></p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Linked Records -->
+    <div class="card">
+      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 class="card-title">Linked Records (<%= records.length %>)</h3>
+        <a href="/records/create?caseId=<%= case.id %>" class="btn btn-primary" style="font-size: 12px; padding: 6px 12px;">
+          <i class="fas fa-plus"></i> Add Record
+        </a>
+      </div>
+      <% if (records.length === 0) { %>
+        <div style="padding: 30px 20px; text-align: center; color: #9ca3af;">
+          <i class="fas fa-folder-open" style="font-size: 28px; margin-bottom: 10px; display: block;"></i>
+          <p>No records linked to this case yet</p>
+        </div>
+      <% } else { %>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Record Type</th>
+                <th>Description</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% records.forEach(record => { %>
+                <tr>
+                  <td>
+                    <span class="badge badge-success" style="text-transform: uppercase; font-size: 10px;"><%= record.recordType %></span>
+                  </td>
+                  <td><%= record.description || '-' %></td>
+                  <td style="font-size: 13px; color: #6b7280;"><%= new Date(record.createdAt).toLocaleDateString() %></td>
+                  <td><a href="/records/<%= record.id %>" style="color: var(--primary); text-decoration: none;">View</a></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div>
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title" style="font-size: 14px;">Details</h3>
+      </div>
+      <div class="card-body" style="font-size: 13px; line-height: 1.8;">
+        <div style="margin-bottom: 15px;">
+          <p style="font-weight: 600; color: #6b7280; margin-bottom: 5px;">Organization</p>
+          <p><%= case.organization %></p>
+        </div>
+        <div>
+          <p style="font-weight: 600; color: #6b7280; margin-bottom: 5px;">Policy</p>
+          <p><%= case.policyId || 'None' %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

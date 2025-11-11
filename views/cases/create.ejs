@@ -1,0 +1,87 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1 class="page-title">Create New Case</h1>
+</div>
+
+<!-- Create Case Form -->
+<div style="display: grid; grid-template-columns: 1fr 350px; gap: 20px; max-width: 1000px;">
+  <!-- Form -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Case Information</h3>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="/cases" style="display: flex; flex-direction: column; gap: 20px;">
+        <!-- Title -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Case Title *</label>
+          <input type="text" name="title" required placeholder="Enter case title" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Description</label>
+          <textarea name="description" rows="4" placeholder="Enter case description" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; font-family: inherit;"></textarea>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Status *</label>
+          <select name="status" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+            <option value="">Select status</option>
+            <option value="Open">Open</option>
+            <option value="Closed">Closed</option>
+            <option value="Under Investigation">Under Investigation</option>
+          </select>
+        </div>
+
+        <!-- Jurisdiction -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Jurisdiction *</label>
+          <input type="text" name="jurisdiction" required placeholder="Enter jurisdiction" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <!-- Case Type -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Case Type *</label>
+          <input type="text" name="caseType" required placeholder="Enter case type (e.g., Robbery, Theft)" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <!-- Policy -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Policy (Optional)</label>
+          <select name="policyId" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+            <option value="">No policy</option>
+            <% policies.forEach(policy => { %>
+              <option value="<%= policy.policyId %>"><%= policy.policyId %></option>
+            <% }); %>
+          </select>
+        </div>
+
+        <!-- Buttons -->
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <a href="/cases" class="btn" style="background-color: #e5e7eb; color: #1f2937;">Cancel</a>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Create Case
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Info Sidebar -->
+  <div class="card" style="height: fit-content;">
+    <div class="card-header">
+      <h3 class="card-title" style="font-size: 14px;">Help</h3>
+    </div>
+    <div class="card-body" style="font-size: 13px; line-height: 1.6; color: #6b7280;">
+      <p><strong style="color: #1f2937;">Tips:</strong></p>
+      <ul style="margin: 10px 0 0 20px;">
+        <li>Fill all required fields (*)</li>
+        <li>You can attach a policy to restrict access</li>
+        <li>Status determines the case workflow</li>
+        <li>Jurisdiction helps with organization</li>
+      </ul>
+    </div>
+  </div>
+</div>

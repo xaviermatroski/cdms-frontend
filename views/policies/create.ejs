@@ -1,0 +1,82 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1 class="page-title">Create New Policy</h1>
+</div>
+
+<!-- Create Policy Form -->
+<div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px; max-width: 1000px;">
+  <!-- Form -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Policy Configuration</h3>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="/policies" style="display: flex; flex-direction: column; gap: 20px;">
+        
+        <!-- Categories -->
+        <div>
+          <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 14px;">Record Categories *</label>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <% ['FIR', 'Evidence', 'Report', 'WitnessStatement'].forEach(cat => { %>
+              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="checkbox" name="categories" value="<%= cat %>" style="width: 16px; height: 16px; cursor: pointer;">
+                <span style="font-size: 14px;"><%= cat %></span>
+              </label>
+            <% }); %>
+          </div>
+        </div>
+
+        <!-- Organizations -->
+        <div>
+          <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 14px;">Allowed Organizations *</label>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <% organizations.forEach(org => { %>
+              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="checkbox" name="allowedOrgs" value="<%= org %>" style="width: 16px; height: 16px; cursor: pointer;">
+                <span style="font-size: 14px;"><%= org %></span>
+              </label>
+            <% }); %>
+          </div>
+        </div>
+
+        <!-- Roles -->
+        <div>
+          <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 14px;">Allowed Roles *</label>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <% roles.forEach(role => { %>
+              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="checkbox" name="allowedRoles" value="<%= role %>" style="width: 16px; height: 16px; cursor: pointer;">
+                <span style="font-size: 14px; text-transform: capitalize;"><%= role %></span>
+              </label>
+            <% }); %>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+          <a href="/policies" class="btn" style="background-color: #e5e7eb; color: #1f2937;">Cancel</a>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Create Policy
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Info Sidebar -->
+  <div class="card" style="height: fit-content;">
+    <div class="card-header">
+      <h3 class="card-title" style="font-size: 14px;">About Policies</h3>
+    </div>
+    <div class="card-body" style="font-size: 13px; line-height: 1.6; color: #6b7280;">
+      <p><strong style="color: #1f2937;">Policies define:</strong></p>
+      <ul style="margin: 10px 0 0 20px;">
+        <li><strong>Categories:</strong> Record types the policy applies to</li>
+        <li><strong>Organizations:</strong> Which orgs can access</li>
+        <li><strong>Roles:</strong> Which roles can access</li>
+      </ul>
+      <p style="margin-top: 10px;"><strong style="color: #1f2937;">Example:</strong></p>
+      <p style="margin: 5px 0; padding: 8px; background-color: #f9fafb; border-radius: 3px; font-size: 12px;">Evidence → Org1MSP, Org2MSP → admin, investigator</p>
+    </div>
+  </div>
+</div>

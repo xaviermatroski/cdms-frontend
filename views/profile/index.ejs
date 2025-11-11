@@ -1,0 +1,150 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1 class="page-title">My Profile</h1>
+</div>
+
+<!-- Profile Cards -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px;">
+  <!-- User Information -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Profile Information</h3>
+    </div>
+    <div class="card-body">
+      <div style="display: flex; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+        <div style="width: 80px; height: 80px; background-color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: bold; margin-right: 20px;">
+          <%= profile.fullName.charAt(0).toUpperCase() %>
+        </div>
+        <div>
+          <p style="margin: 0; font-size: 18px; font-weight: 700; color: #1f2937;"><%= profile.fullName %></p>
+          <p style="margin: 5px 0 0 0; font-size: 13px; color: #6b7280;"><%= profile.username %></p>
+          <p style="margin: 8px 0 0 0; display: inline-block; background-color: #f0f4ff; color: #1e3a8a; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase;"><%= profile.role %></p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div>
+          <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">USERNAME</p>
+          <p style="font-size: 14px; color: #1f2937;"><%= profile.username %></p>
+        </div>
+        <div>
+          <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">EMAIL</p>
+          <p style="font-size: 14px; color: #1f2937;"><%= profile.email %></p>
+        </div>
+        <div>
+          <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">ORGANIZATION</p>
+          <p style="font-size: 14px; color: #1f2937;"><%= profile.organization %></p>
+        </div>
+        <div>
+          <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">STATUS</p>
+          <p style="font-size: 14px;"><span style="display: inline-block; background-color: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;"><i class="fas fa-circle"></i> <%= profile.status %></span></p>
+        </div>
+        <div>
+          <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">JOINED DATE</p>
+          <p style="font-size: 14px; color: #1f2937;"><%= new Date(profile.joinedDate).toLocaleDateString() %></p>
+        </div>
+        <div>
+          <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">LAST LOGIN</p>
+          <p style="font-size: 14px; color: #1f2937;"><%= new Date(profile.lastLogin).toLocaleString() %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Permissions -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Permissions & Access</h3>
+    </div>
+    <div class="card-body">
+      <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 15px; text-transform: uppercase;">Role: <strong style="color: #1f2937; text-transform: capitalize;"><%= profile.role %></strong></p>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <% profile.permissions.forEach(permission => { %>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background-color: #f9fafb; border-radius: 4px; border-left: 3px solid var(--primary);">
+            <i class="fas fa-check" style="color: var(--primary);"></i>
+            <span style="font-size: 13px; color: #1f2937;"><%= permission %></span>
+          </div>
+        <% }); %>
+      </div>
+
+      <% if (profile.permissions.length === 0) { %>
+        <p style="text-align: center; color: #9ca3af; padding: 20px; font-size: 13px;">No permissions assigned</p>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Account Settings -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Account Settings</h3>
+    </div>
+    <div class="card-body">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="#" class="btn" style="background-color: #e5e7eb; color: #1f2937; justify-content: center; border: none;">
+          <i class="fas fa-key"></i> Change Password
+        </a>
+        <a href="#" class="btn" style="background-color: #e5e7eb; color: #1f2937; justify-content: center; border: none;">
+          <i class="fas fa-mobile-alt"></i> Two-Factor Authentication
+        </a>
+        <a href="#" class="btn" style="background-color: #e5e7eb; color: #1f2937; justify-content: center; border: none;">
+          <i class="fas fa-history"></i> Login History
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Organization Info -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Organization Info</h3>
+    </div>
+    <div class="card-body" style="display: flex; flex-direction: column; gap: 15px;">
+      <div>
+        <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">ORGANIZATION</p>
+        <p style="font-size: 14px; color: #1f2937;"><%= profile.organization %></p>
+      </div>
+      <div>
+        <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">ORGANIZATION TYPE</p>
+        <p style="font-size: 14px; color: #1f2937;">
+          <% if (profile.organization === 'Org1MSP') { %>
+            Police Department
+          <% } else if (profile.organization === 'Org2MSP') { %>
+            Judiciary
+          <% } else { %>
+            <%= profile.organization %>
+          <% } %>
+        </p>
+      </div>
+      <div>
+        <p style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 5px;">NETWORK</p>
+        <p style="font-size: 14px; color: #1f2937;">Blockchain Network (CDMS)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Links -->
+<div class="card" style="margin-top: 20px;">
+  <div class="card-header">
+    <h3 class="card-title">Quick Links</h3>
+  </div>
+  <div class="card-body">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+      <a href="/dashboard" class="btn btn-primary" style="justify-content: center;">
+        <i class="fas fa-chart-line"></i> Dashboard
+      </a>
+      <a href="/cases" class="btn btn-primary" style="justify-content: center;">
+        <i class="fas fa-folder-open"></i> View Cases
+      </a>
+      <a href="/records" class="btn btn-primary" style="justify-content: center;">
+        <i class="fas fa-file-alt"></i> View Records
+      </a>
+      <% if (user.role === 'admin') { %>
+        <a href="/policies" class="btn btn-primary" style="justify-content: center;">
+          <i class="fas fa-shield-alt"></i> Manage Policies
+        </a>
+      <% } %>
+    </div>
+  </div>
+</div>

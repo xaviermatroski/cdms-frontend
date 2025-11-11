@@ -1,0 +1,125 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1 class="page-title">Upload Record</h1>
+</div>
+
+<!-- Upload Form -->
+<div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px; max-width: 1000px;">
+  <!-- Form -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Record Information</h3>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="/records" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 20px;">
+        
+        <!-- Case ID -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Case ID *</label>
+          <input type="text" name="caseId" value="<%= selectedCaseId || '' %>" required placeholder="Enter case ID" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <!-- Record Type -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Record Type *</label>
+          <select name="recordType" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px;">
+            <option value="">Select type</option>
+            <option value="FIR">FIR</option>
+            <option value="Evidence">Evidence</option>
+            <option value="Report">Report</option>
+            <option value="WitnessStatement">Witness Statement</option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Description</label>
+          <textarea name="description" rows="3" placeholder="Enter record description" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; font-family: inherit;"></textarea>
+        </div>
+
+        <!-- File Upload -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px;">File *</label>
+          <div id="dropZone" style="border: 2px dashed var(--border); border-radius: 6px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.2s; background-color: #f9fafb;">
+            <div style="font-size: 32px; margin-bottom: 10px; color: var(--primary);">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <p style="margin: 0; color: #6b7280;">Drag and drop your file here, or click to select</p>
+            <p style="font-size: 12px; color: #9ca3af; margin-top: 5px;">Supported formats: PDF, DOC, DOCX, JPG, PNG, etc.</p>
+            <input type="file" id="fileInput" name="file" hidden required>
+          </div>
+          <div id="fileInfo" style="display: none; margin-top: 10px; padding: 10px; background-color: #f0f9ff; border-radius: 4px; border: 1px solid #bfdbfe;">
+            <p style="margin: 0; font-size: 13px; color: #059669;"><i class="fas fa-check-circle"></i> File selected: <strong><span id="fileName"></span></strong></p>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <a href="/records" class="btn" style="background-color: #e5e7eb; color: #1f2937;">Cancel</a>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-upload"></i> Upload Record
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Info Sidebar -->
+  <div class="card" style="height: fit-content;">
+    <div class="card-header">
+      <h3 class="card-title" style="font-size: 14px;">Upload Tips</h3>
+    </div>
+    <div class="card-body" style="font-size: 13px; line-height: 1.6; color: #6b7280;">
+      <ul style="margin: 0; padding-left: 20px;">
+        <li>Fill all required fields (*)</li>
+        <li>File size should not exceed 100MB</li>
+        <li>Supported formats: PDF, images, documents</li>
+        <li>Case ID must exist</li>
+        <li>Record type determines access policies</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileInfo = document.getElementById('fileInfo');
+  const fileName = document.getElementById('fileName');
+
+  // Click to select file
+  dropZone.addEventListener('click', () => fileInput.click());
+
+  // Drag and drop
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = 'var(--primary)';
+    dropZone.style.backgroundColor = '#f0f4ff';
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.style.borderColor = 'var(--border)';
+    dropZone.style.backgroundColor = '#f9fafb';
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = 'var(--border)';
+    dropZone.style.backgroundColor = '#f9fafb';
+    if (e.dataTransfer.files.length > 0) {
+      fileInput.files = e.dataTransfer.files;
+      updateFileInfo();
+    }
+  });
+
+  fileInput.addEventListener('change', updateFileInfo);
+
+  function updateFileInfo() {
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      fileName.textContent = `${file.name} (${sizeMB} MB)`;
+      fileInfo.style.display = 'block';
+    }
+  }
+</script>

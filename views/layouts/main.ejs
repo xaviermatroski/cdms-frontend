@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle || 'CDMS' %></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <% if (user) { %>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <a href="/dashboard" class="navbar-brand">
+        <div class="navbar-brand-logo">
+          <i class="fas fa-lock"></i>
+        </div>
+        <div>
+          <div class="navbar-brand-text">CDMS</div>
+          <div class="navbar-brand-subtext">Criminal Data Management</div>
+        </div>
+      </a>
+
+      <div class="navbar-right">
+        <div class="org-badge"><%= user.organization %></div>
+        
+        <button class="user-menu" id="userMenuBtn">
+          <div class="user-avatar"><%= user.username.charAt(0).toUpperCase() %></div>
+          <div class="user-info">
+            <div class="user-name"><%= user.fullName || user.username %></div>
+            <div class="user-role"><%= user.role %></div>
+          </div>
+        </button>
+      </div>
+    </nav>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <ul class="sidebar-nav">
+        <li class="sidebar-item">
+          <a href="/dashboard" class="sidebar-link <% if (currentPage === '/dashboard') { %>active<% } %>">
+            <i class="fas fa-chart-line"></i>
+            Dashboard
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/cases" class="sidebar-link <% if (currentPage === '/cases') { %>active<% } %>">
+            <i class="fas fa-folder-open"></i>
+            Cases
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/records" class="sidebar-link <% if (currentPage === '/records') { %>active<% } %>">
+            <i class="fas fa-file-alt"></i>
+            Records
+          </a>
+        </li>
+
+        <% if (user && user.role === 'admin') { %>
+          <li style="padding-top: 20px; margin-top: 20px; border-top: 1px solid var(--border);">
+            <div style="padding: 0 20px 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #9ca3af;">Admin</div>
+          </li>
+          <li class="sidebar-item">
+            <a href="/policies" class="sidebar-link <% if (currentPage === '/policies') { %>active<% } %>">
+              <i class="fas fa-shield-alt"></i>
+              Policies
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/users" class="sidebar-link <% if (currentPage === '/users') { %>active<% } %>">
+              <i class="fas fa-users"></i>
+              Users
+            </a>
+          </li>
+        <% } %>
+      </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- Alerts -->
+      <% if (error) { %>
+        <div class="alert alert-danger">
+          <i class="fas fa-exclamation-circle"></i>
+          <div><strong>Error!</strong> <%= error %></div>
+        </div>
+      <% } %>
+
+      <% if (success) { %>
+        <div class="alert alert-success">
+          <i class="fas fa-check-circle"></i>
+          <div><strong>Success!</strong> <%= success %></div>
+        </div>
+      <% } %>
+
+      <!-- Page Content -->
+      <%- include('../' + body) %>
+    </main>
+
+    <script src="/js/ui.js"></script>
+
+  <% } else { %>
+    <%- body %>
+  <% } %>
+</body>
+</html>
